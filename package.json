@@ -18,7 +18,7 @@
   "scripts": { "test": "node ./test/test.js" },
   "dependencies": {
     "entities": "~ 1.1.1",
-    "mdurl": "~ 1.0.0",
+    "mdurl": "git://github.com/xxgreg/mdurl",
     "string.prototype.repeat": "^0.2.0"
   },
   "directories": {

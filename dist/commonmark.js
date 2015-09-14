@@ -1,4 +1,4 @@
-!function(e){if("object"==typeof exports&&"undefined"!=typeof module)module.exports=e();else if("function"==typeof define&&define.amd)define([],e);else{var o;"undefined"!=typeof window?o=window:"undefined"!=typeof global?o=global:"undefined"!=typeof self&&(o=self),o.commonmark=e()}}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.commonmark = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 "use strict";
 
 var Node = require('./node');
@@ -2975,7 +2975,7 @@ function decode(string, exclude) {
   cache = getDecodeCache(exclude);
 
   return string.replace(/(%[a-f0-9]{2})+/gi, function(seq) {
-    var i, l, b1, b2, b3, b4, char,
+    var i, l, b1, b2, b3, b4, ch,
         result = '';
 
     for (i = 0, l = seq.length; i < l; i += 3) {
@@ -2991,12 +2991,12 @@ function decode(string, exclude) {
         b2 = parseInt(seq.slice(i + 4, i + 6), 16);
 
         if ((b2 & 0xC0) === 0x80) {
-          char = ((b1 << 6) & 0x7C0) | (b2 & 0x3F);
+          ch = ((b1 << 6) & 0x7C0) | (b2 & 0x3F);
 
-          if (char < 0x80) {
+          if (ch < 0x80) {
             result += '\ufffd\ufffd';
           } else {
-            result += String.fromCharCode(char);
+            result += String.fromCharCode(ch);
           }
 
           i += 3;
@@ -3010,12 +3010,12 @@ function decode(string, exclude) {
         b3 = parseInt(seq.slice(i + 7, i + 9), 16);
 
         if ((b2 & 0xC0) === 0x80 && (b3 & 0xC0) === 0x80) {
-          char = ((b1 << 12) & 0xF000) | ((b2 << 6) & 0xFC0) | (b3 & 0x3F);
+          ch = ((b1 << 12) & 0xF000) | ((b2 << 6) & 0xFC0) | (b3 & 0x3F);
 
-          if (char < 0x800 || (char >= 0xD800 && char <= 0xDFFF)) {
+          if (ch < 0x800 || (ch >= 0xD800 && ch <= 0xDFFF)) {
             result += '\ufffd\ufffd\ufffd';
           } else {
-            result += String.fromCharCode(char);
+            result += String.fromCharCode(ch);
           }
 
           i += 6;
@@ -3030,13 +3030,13 @@ function decode(string, exclude) {
         b4 = parseInt(seq.slice(i + 10, i + 12), 16);
 
         if ((b2 & 0xC0) === 0x80 && (b3 & 0xC0) === 0x80 && (b4 & 0xC0) === 0x80) {
-          char = ((b1 << 18) & 0x1C0000) | ((b2 << 12) & 0x3F000) | ((b3 << 6) & 0xFC0) | (b4 & 0x3F);
+          ch = ((b1 << 18) & 0x1C0000) | ((b2 << 12) & 0x3F000) | ((b3 << 6) & 0xFC0) | (b4 & 0x3F);
 
-          if (char < 0x10000 || char > 0x10FFFF) {
+          if (ch < 0x10000 || ch > 0x10FFFF) {
             result += '\ufffd\ufffd\ufffd\ufffd';
           } else {
-            char -= 0x10000;
-            result += String.fromCharCode(0xD800 + (char >> 10), 0xDC00 + (char & 0x3FF));
+            ch -= 0x10000;
+            result += String.fromCharCode(0xD800 + (ch >> 10), 0xDC00 + (ch & 0x3FF));
           }
 
           i += 9;
